@@ -1,0 +1,22 @@
+{
+  "name": "book-record-management-system",
+  "version": "1.0.0",
+  "description": "book record management server build with node.js and express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev":"nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Noor291/BookRecordManagement"
+  },
+  "author": "Noordeep Kaur",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
