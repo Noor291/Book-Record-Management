@@ -126,8 +126,98 @@ router.delete('/:id',(req,res)=>{
     users.splice(index,1);
     return res.status(201).json({
      success:true,
-     data:Users,
+     data:users,
     });
  });
+
+ /**
+ * Route: /users/subscription-details/:id
+ * Method: GET
+ * Description: get all user subscription details
+ * Access: Public
+ * Parameters: id
+ */
+
+router.get('/subscription-details/:id',(req,res)=>{
+    const{id}=req.params;
+    const user=users.find((each)=>each.id===id);
+    if(!user)
+     return res.status(404).json({
+         success:false,
+         message:"User does not exists",
+     });
+    
+    const getDateInDays=(data="")=>{
+        let date;
+        if(data===""){
+            date= new Date();
+        }else{
+            date=new Date(data);
+        }
+        let days=Math.floor(date/(1000*60*60*24));
+        return days;
+    };
+    
+    const subscriptionType=(date)=>{
+        if(user.subscriptionType==="Basic"){
+            date=date+90;
+        }else if(subscriptionType==="Standard"){
+            date=date+180;
+        }else if(user.subscriptionType==="Premium"){
+            date=date+365;
+        }
+        return date;
+    };
+    //Subscription expiration calculation
+    // January 1, 1970, UTC. in milliseconds
+    let returnDate = getDateInDays(user.returnDate);
+    let currentDate = getDateInDays();
+    let subscriptionDate=getDateInDays(user.subscriptionDate);
+    let subscriptionExpiration= subscriptionType(subscriptionDate);
+
+    const data={
+        ...user,
+        subscriptionExpired: subscriptionExpiration<currentDate,
+        daysLeftForExpiration:
+            subscriptionExpiration<=currentDate?0:subscriptionExpiration-currentDate,
+        fine:
+            returnDate<currentDate 
+                ? subscriptionExpiration<=currentDate
+                    ?200
+                    :100
+                :0,
+    };
+    //dates in mmddyyyy
+    res.status(200).json({
+        success:"true",
+        data,
+    });
+
+ });
+
+/**
+ * Route: /users/:id
+ * Method: GET
+ * Description: get all issued books with fine of a user
+ * Access: Public
+ * Parameters: none
+ */
+
+router.get('/:id',(req,res)=>{
+    const{id}=req.params;
+    const user=users.find((each)=>each.id===id);
+    if(!user){
+     return res.status(404).json({
+         success:false,
+         message:"User does not exists",
+     });
+    }
+    const index=books.indexOf(book);
+    books.splice(index,1);
+    return res.status(201).json({
+     success:true,
+     data:books,
+    });
+});
  
  module.exports= router;
