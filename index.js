@@ -1,10 +1,18 @@
 const express= require ("express");
+const dotenv = require('dotenv');
+
+const DbConnection = require("./databaseConnection")
 
 //importing routes
 const usersRouter=require("./routes/users")
 const booksRouter=require("./routes/books")
 
-const app=express();
+dotenv.config()
+
+const app=express(); //instance of nodejs server
+
+DbConnection(); // connect to database
+
 const PORT=8081;
 app.use(express.json());
 
