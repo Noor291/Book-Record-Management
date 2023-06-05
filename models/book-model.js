@@ -22,7 +22,7 @@ const bookSchema=new Schema({
         required:true,
     },
 },{
-    timestamp:true,
+    timestamps:true,
 });
 
 //collection will have a name "books" b small and plural

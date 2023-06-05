@@ -5,7 +5,7 @@ const userSchema=new Schema({
         type:String,
         required:true,
     },
-    Surname:{
+    surname:{
         type:String,
         required:true,
     },
@@ -17,6 +17,11 @@ const userSchema=new Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Book",
         required:false,
+    },
+    issuedDate:{
+        type:String,
+        required:false,
+
     },
     returnDate:{
         type:String,
@@ -31,7 +36,7 @@ const userSchema=new Schema({
         required:true,
     },
 },{
-    timestamp:true,
+    timestamps:true,
 });
 
 module.exports=mongoose.model("User",userSchema)

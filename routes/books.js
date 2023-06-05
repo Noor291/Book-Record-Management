@@ -2,9 +2,9 @@ const express=require("express");
 
 const {books}= require("../data/books.json")  //destructuring
 const {users}= require("../data/users.json");  //destructuring
-const { getAllBooks } = require("../controllers/book-controller");
+const { getAllBooks, updateBook,getSingleBookById,getAllIssuedBooks,addNewBook,deleteBook} = require("../controllers/book-controller");
 
-const {UserModel,BookModel}=requie("../models") //index.js is default file
+const {UserModel,BookModel}=require("../models") //index.js is default file
 
 const router=express.Router();
 
@@ -46,28 +46,7 @@ router.get('/issued/books',getAllIssuedBooks)
  * Parameters: None
  */
 
-router.post('/',(req,res)=>{
-    const{id,name,author,genre,price,publisher}=req.body;
-    const book=books.find((each)=>each.id===id);
-    if(book){
-     return res.status(404).json({
-         success:false,
-         message:"book exists with this id",
-     });
-    }
-    books.push({
-     id,
-     name,
-     author,
-     genre,
-     price,
-     publisher,
-    });
-    return res.status(201).json({
-     success:true,
-     data:books,
-    });
- });
+router.post('/',addNewBook);
 
  /**
  * Route: /books/:id
@@ -77,30 +56,7 @@ router.post('/',(req,res)=>{
  * Parameters: id
  */
 
-router.put('/:id',(req,res)=>{
-    const{id}=req.params;
-    const{data}=req.body;
-    const book=books.find((each)=>each.id===id);
-    if(!book){
-     return res.status(404).json({
-         success:false,
-         message:"book does not exists",
-     });
-    }
-    const updatedBook = books.map((each)=>{
-        if(each.id===id){
-            return{
-              ...each,
-              ...data,
-            };
-        }
-        return each;
-    })
-    return res.status(201).json({
-     success:true,
-     data:updatedBook,
-    });
- });
+router.put('/:id',updateBook)
 
  /**
  * Route: /books/:id
@@ -110,22 +66,7 @@ router.put('/:id',(req,res)=>{
  * Parameters: id
  */
 
-router.delete('/:id',(req,res)=>{
-    const{id}=req.params;
-    const book=books.find((each)=>each.id===id);
-    if(!book){
-     return res.status(404).json({
-         success:false,
-         message:"book does not exists",
-     });
-    }
-    const index=books.indexOf(book);
-    books.splice(index,1);
-    return res.status(201).json({
-     success:true,
-     data:books,
-    });
- });
+router.delete('/:id',deleteBook)
 
 //function
 function getFine(user){
