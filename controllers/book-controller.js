@@ -1,5 +1,6 @@
 const {UserModel,BookModel}=require("../models")
 const IssuedBook = require("../dtos/book-dto");
+const IssuedBookFine=require("../dtos/book-dto1")
 
 exports.getAllBooks=async (req,res)=>{
     const books = await BookModel.find();
@@ -86,3 +87,18 @@ exports.deleteBook=async (req,res)=>{
      data:allBooks,
     });
 };
+
+exports.getIssuedBooksWithFine=async (req,res)=>{
+    const users = await UserModel.find({
+        issuedBook:{$exists:true}, //operators in mongoDB
+    }).populate("issuedBook")
+    
+    const issuedBooks = users.map((each)=> new IssuedBookFine(each))
+    
+    if(issuedBooks.length===0)
+      return res.status(404).json({
+        success:false,
+        message:"No books issued yet",
+      })
+    return res.status(200).json({success:true,data:issuedBooks,})
+ }
